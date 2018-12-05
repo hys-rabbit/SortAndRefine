@@ -1,0 +1,27 @@
+@charset "utf-8";
+
+body {
+    padding: 10px 0;
+}
+
+h1{
+    font-weight: bold;
+    position: relative;
+    padding: 0.5em;
+    background: #252b29;
+    color: white;
+}
+
+h1::before {
+    position: absolute;
+    content: '';
+    top: 100%;
+    left: 0;
+    border: none;
+    border-bottom: solid 15px transparent;
+    border-right: solid 20px rgb(149, 158, 155);
+}
+
+table#prefectures_data tr td:nth-of-type(4) {
+    text-align: right;
+}
