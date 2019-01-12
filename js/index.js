@@ -52,21 +52,11 @@ function sort (sortValue) {
     });
 
     // テーブルノードをソート
-    for (var i = 0; i < prefectureList.length; i++) {
-        for (var j = 0; j < prefectureList.length - 1 - i; j++) {
-            if (prefectureList[j].sortKey > prefectureList[j + 1].sortKey && isUp) {
-                // 昇順
-                var temp = prefectureList[j];
-                prefectureList[j] = prefectureList[j + 1];
-                prefectureList[j + 1] = temp;
-            } else if (prefectureList[j].sortKey < prefectureList[j + 1].sortKey && !isUp) {
-                // 降順
-                var temp = prefectureList[j];
-                prefectureList[j] = prefectureList[j + 1];
-                prefectureList[j + 1] = temp;
-            }
-        }
-    }
+    prefectureList.sort(function(a, b){
+        if (a.sortKey < b.sortKey) return isUp ? -1 : 1;
+        if (a.sortKey > b.sortKey) return isUp ? 1 : -1;
+        return 0;
+    });
 
     // テーブルの再構築
     document.querySelector("table#prefectures_data tbody").innerHTML = '';
