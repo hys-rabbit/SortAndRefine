@@ -5,7 +5,7 @@
  */
 function refine (refineValue) {
     getPrefecturesElementsArray().forEach(element => {
-        var cssDisplay = element.innerText.includes(refineValue)? "" : "none";
+        var cssDisplay = element.children.item(2).innerText.includes(refineValue)? "" : "none";
         element.setAttribute("style",`display:${cssDisplay}`);
     });
 }
@@ -66,5 +66,7 @@ function sort (sortValue) {
  * @description 都道府県テーブルのtbody以下のtr要素を配列形式で取得する。
  */
 function getPrefecturesElementsArray () {
-    return Array.prototype.slice.call(document.querySelector("table#prefectures_data tbody").children);
+    return Array.prototype.slice.call(
+        document.querySelector("table#prefectures_data tbody").children
+    );
 }
