@@ -25,8 +25,8 @@ function refine (refineValue) {
 function sort (sortValue) {
 
     if (sortValue == "0") {
-        // 未選択の場合処理終了
-        return;
+        // 画面描画でデフォルトに戻す
+        window.location.reload();
     }
 
     // ソート項目と昇順or降順の取得
