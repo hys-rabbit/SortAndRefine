@@ -1,60 +1,85 @@
 /**
- * ローマ字による絞り込み処理
+ * テキスト絞り込み処理
  * @param {string} refineValue 
- * @description 入力された値をローマ字に含む行データのみ表示する。
+ * @description 入力された値を含む行データのみ表示する。
  */
 function refine (refineValue) {
-    getPrefecturesElementsArray().forEach(element => {
-        var cssDisplay = element.children.item(2).innerText.includes(refineValue)? "" : "none";
-        element.setAttribute("style",`display:${cssDisplay}`);
+    getPrefecturesElementsArray().forEach(trElement => {
+        // 行内の各列テキストをフィルターにかけ、入力値の有無でCSSを設定する。
+        var trStyleDisplay = Array.prototype.slice.call(trElement.children).filter(e => e.innerText.includes(refineValue)).length > 0 ?  "" : "none";
+        trElement.setAttribute("style",`display:${trStyleDisplay}`);
     });
 }
+
+/**
+ * ソートSELECBOXデータ
+ */
+var sortSelectBox = [
+    {   // 未選択
+        "columnIndex": "",
+        "order": ""
+    },{ // 読み（昇順）
+        "columnIndex": 1,
+        "order": "asc"
+    },{ // 読み（降順）
+        "columnIndex": 1,
+        "order": "desc"
+    },{ // ローマ字（昇順）
+        "columnIndex": 2,
+        "order": "asc"
+    },{ // ローマ字（降順）
+        "columnIndex": 2,
+        "order": "desc"
+    },{ // 人口（昇順）
+        "columnIndex": 3,
+        "order": "asc"
+    },{ // 人口（降順）
+        "columnIndex": 3,
+        "order": "desc"
+    }
+]
 
 /**
  * 各項目のソート処理
  * @param {number} sortValue
  * @description 入力されたソート値を見て都道府県テーブルをソートする。
- * - 0 -> 未選択
- * - 1:0 -> 読み（昇順）
- * - 1:1 -> 読み（降順）
- * - 2:0 -> ローマ字（昇順）
- * - 2:1 -> ローマ字（降順）
- * - 3:0 -> 人口（昇順）
- * - 3:1 -> 人口（降順）
  */
 function sort (sortValue) {
+    // 入力値を数値に変換する。
+    var sortValueInt = Number(sortValue);
 
-    if (sortValue == "0") {
-        // 画面描画でデフォルトに戻す
+    // 入力値が未選択もしくは許容していない値の場合、
+    // 画面を再描画してデフォルトに戻す。
+    if (sortValueInt < 1 || 6 < sortValueInt) {
         window.location.reload();
     }
 
-    // ソート項目と昇順or降順の取得
-    var index = Number(sortValue.split(":")[0]);
-    var isUp = sortValue.split(":")[1] == "0";
+    // ソートする項目のカラムインデックスとソートオーダーを変数に取得する。
+    var index = sortSelectBox[sortValueInt].columnIndex;
+    var order = sortSelectBox[sortValueInt].order;
 
-    // テーブルノードを保持
+    // ソートする項目のテキストとそれを含む行ノードを都道府県リストとして保持する。
+    // 人口の場合は数値比較するのでカンマを除いた状態で保持する。
     prefectureList = [];
     getPrefecturesElementsArray().forEach(element => {
-        var sortKey = element.childNodes[index].innerText;
-        if (index == 3) {
-            // 人口の場合数値比較するので数値変換
-            sortKey = Number(sortKey.replace(/,/g, ''));
-        }
+        var sortKey = index == 3 ?  
+            Number(element.childNodes[index].innerText.replace(/,/g, '')) : 
+            element.childNodes[index].innerText;
         prefectureList.push({
             sortKey: sortKey,
             node: element.cloneNode(true)
         });
     });
 
-    // テーブルノードをソート
+    // 都道府県リストを選択項目でソートする。
     prefectureList.sort(function(a, b){
-        if (a.sortKey < b.sortKey) return isUp ? -1 : 1;
-        if (a.sortKey > b.sortKey) return isUp ? 1 : -1;
+        if (a.sortKey < b.sortKey) return order == "asc" ? -1 : 1;
+        if (a.sortKey > b.sortKey) return order == "asc" ? 1 : -1;
         return 0;
     });
 
-    // テーブルの再構築
+    // テーブルボディ内を一度消し、
+    // 保持しておいて行ノードでテーブルを再構築する。
     document.querySelector("table#prefectures_data tbody").innerHTML = '';
     prefectureList.forEach(prefecture => {
         document.querySelector("table#prefectures_data tbody").appendChild(prefecture.node);

@@ -11,16 +11,16 @@
             <h1>都道府県別人口一覧</h1>
             <div style="padding: 10px;">
                 <img src="assets/refine_icon.png" height="28px" alt="絞り込み検索" />&ensp;
-                <input placeholder="ローマ字絞り込み" type="text" onkeyup="refine(this.value);" />&ensp;
+                <input placeholder="絞り込み検索" type="text" onkeyup="refine(this.value);" />&ensp;
                 <img src="assets/sort_icon.png" height="28px" alt="ソート検索" />&ensp;
                 <select onchange="sort(this.value);">
                     <option value="0"> --------------- </option>
-                    <option value="1:0"> 読み（昇順） </option>
-                    <option value="1:1"> 読み（降順） </option>
-                    <option value="2:0"> ローマ字（昇順） </option>
-                    <option value="2:1"> ローマ字（降順） </option>
-                    <option value="3:0"> 人口（昇順） </option>
-                    <option value="3:1"> 人口（降順） </option>
+                    <option value="1"> 読み（昇順） </option>
+                    <option value="2"> 読み（降順） </option>
+                    <option value="3"> ローマ字（昇順） </option>
+                    <option value="4"> ローマ字（降順） </option>
+                    <option value="5"> 人口（昇順） </option>
+                    <option value="6"> 人口（降順） </option>
                 </select>
                 </div>
             <table id="prefectures_data" class="table table-bordered table-hover">
